@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Header from './Header';
 import LeftSidebar from './LeftSidebar';
-import RightSidebar from './RightSidebar';
 import Footer from './Footer';
 import { fetchUserData } from './authUtils';
 import './BookListPage.css';
@@ -149,7 +148,6 @@ function SettingsPage() {
             </div>
           )}
         </main>
-        <RightSidebar />
       </div>
       <Footer />
     </div>
