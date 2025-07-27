@@ -71,6 +71,21 @@ function MyBooksPage() {
   const [showReaderModal, setShowReaderModal] = useState(false);
   const [currentReaderBook, setCurrentReaderBook] = useState(null);
   
+  // Upload modal state
+  const [showUploadModal, setShowUploadModal] = useState(false);
+  const [uploadForm, setUploadForm] = useState({
+    title: '',
+    author: '',
+    description: '',
+    category: '',
+    totalPages: '',
+    publishToStore: false,
+    coverImage: null,
+    bookFile: null
+  });
+  const [uploadProgress, setUploadProgress] = useState(0);
+  const [uploadStatus, setUploadStatus] = useState('');
+  
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
   const [booksPerPage] = useState(4);
@@ -137,6 +152,129 @@ function MyBooksPage() {
     setBooks(prev => prev.map(book => book.id === updatedBook.id ? updatedBook : book));
   };
 
+  // Upload modal functions
+  const openUploadModal = () => {
+    setShowUploadModal(true);
+    setUploadForm({
+      title: '',
+      author: '',
+      description: '',
+      category: '',
+      totalPages: '',
+      publishToStore: false,
+      coverImage: null,
+      bookFile: null
+    });
+    setUploadProgress(0);
+    setUploadStatus('');
+  };
+
+  const closeUploadModal = () => {
+    setShowUploadModal(false);
+  };
+
+  const handleFileChange = (e, type) => {
+    console.log('File change triggered:', type, e.target.files);
+    const file = e.target.files[0];
+    if (file) {
+      console.log('File selected:', file.name, file.type, file.size);
+      // Validate file type
+      if (type === 'coverImage' && !file.type.startsWith('image/')) {
+        alert('Please select an image file for the cover.');
+        return;
+      }
+      if (type === 'bookFile' && !file.name.toLowerCase().endsWith('.pdf')) {
+        alert('Please select a PDF file for the book.');
+        return;
+      }
+      
+      // Validate file size (max 10MB for images, 50MB for PDFs)
+      const maxSize = type === 'coverImage' ? 10 * 1024 * 1024 : 50 * 1024 * 1024;
+      if (file.size > maxSize) {
+        alert(`File size too large. Maximum size is ${type === 'coverImage' ? '10MB' : '50MB'}.`);
+        return;
+      }
+      
+      setUploadForm(prev => ({
+        ...prev,
+        [type]: file
+      }));
+      console.log('File added to form state');
+    }
+  };
+
+  const triggerFileInput = (inputId) => {
+    console.log('Triggering file input for:', inputId);
+    const fileInput = document.getElementById(inputId);
+    if (fileInput) {
+      console.log('File input found, clicking...');
+      fileInput.click();
+    } else {
+      console.log('File input not found for ID:', inputId);
+    }
+  };
+
+
+  const handleFormChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    setUploadForm(prev => ({
+      ...prev,
+      [name]: type === 'checkbox' ? checked : value
+    }));
+  };
+
+  const handleUpload = async () => {
+    // Validate form
+    if (!uploadForm.title || !uploadForm.author || !uploadForm.bookFile) {
+      setUploadStatus('error');
+      return;
+    }
+
+    setUploadStatus('uploading');
+    setUploadProgress(0);
+
+    // Simulate upload progress
+    const progressInterval = setInterval(() => {
+      setUploadProgress(prev => {
+        if (prev >= 100) {
+          clearInterval(progressInterval);
+          return 100;
+        }
+        return prev + 10;
+      });
+    }, 200);
+
+    // Simulate upload completion
+    setTimeout(() => {
+      clearInterval(progressInterval);
+      setUploadProgress(100);
+      setUploadStatus('success');
+
+      // Add new book to the list
+      const newBook = {
+        id: Date.now(),
+        title: uploadForm.title,
+        author: uploadForm.author,
+        coverImg: uploadForm.coverImage ? URL.createObjectURL(uploadForm.coverImage) : 'https://images.unsplash.com/photo-1544947950-fa07a98d237f?q=80&w=800',
+        totalPages: parseInt(uploadForm.totalPages) || 300,
+        currentPage: 0,
+        status: 'in-progress',
+        lastRead: new Date(),
+        points: 0,
+        description: uploadForm.description,
+        category: uploadForm.category,
+        publishToStore: uploadForm.publishToStore
+      };
+
+      setBooks(prev => [newBook, ...prev]);
+      
+      // Close modal after success
+      setTimeout(() => {
+        closeUploadModal();
+      }, 1500);
+    }, 2000);
+  };
+
   const getStatusText = (status) => {
     return status.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase());
   };
@@ -169,19 +307,25 @@ function MyBooksPage() {
         <main className="blp-main">
           <div className="library-header">
             <h1>My Books</h1>
-            <div className="stats-summary">
-              <div className="stat-item">
-                <span className="stat-number">{stats.inProgress}</span>
-                <span className="stat-label">In Progress</span>
+            <div className="header-actions">
+              <div className="stats-summary">
+                <div className="stat-item">
+                  <span className="stat-number">{stats.inProgress}</span>
+                  <span className="stat-label">In Progress</span>
+                </div>
+                <div className="stat-item">
+                  <span className="stat-number">{stats.completed}</span>
+                  <span className="stat-label">Completed</span>
+                </div>
+                <div className="stat-item">
+                  <span className="stat-number">{stats.overallProgress}%</span>
+                  <span className="stat-label">Overall Progress</span>
+                </div>
               </div>
-              <div className="stat-item">
-                <span className="stat-number">{stats.completed}</span>
-                <span className="stat-label">Completed</span>
-              </div>
-              <div className="stat-item">
-                <span className="stat-number">{stats.overallProgress}%</span>
-                <span className="stat-label">Overall Progress</span>
-              </div>
+              <button className="upload-btn" onClick={openUploadModal}>
+                <span className="upload-icon">📚</span>
+                Upload Book
+              </button>
             </div>
           </div>
 
@@ -361,6 +505,173 @@ function MyBooksPage() {
               >
                 Next →
               </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Upload Modal */}
+      {showUploadModal && (
+        <div className="modal-overlay" onClick={closeUploadModal}>
+          <div className="upload-modal-content" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h2>Upload New Book</h2>
+              <button 
+                className="modal-close-btn"
+                onClick={closeUploadModal}
+              >
+                ✕
+              </button>
+            </div>
+            <div className="upload-form-container">
+              <div className="form-group">
+                <label htmlFor="title">Title:</label>
+                <input
+                  type="text"
+                  id="title"
+                  name="title"
+                  value={uploadForm.title}
+                  onChange={handleFormChange}
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="author">Author:</label>
+                <input
+                  type="text"
+                  id="author"
+                  name="author"
+                  value={uploadForm.author}
+                  onChange={handleFormChange}
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="description">Description:</label>
+                <textarea
+                  id="description"
+                  name="description"
+                  value={uploadForm.description}
+                  onChange={handleFormChange}
+                ></textarea>
+              </div>
+              <div className="form-group">
+                <label htmlFor="category">Category:</label>
+                <input
+                  type="text"
+                  id="category"
+                  name="category"
+                  value={uploadForm.category}
+                  onChange={handleFormChange}
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="totalPages">Total Pages:</label>
+                <input
+                  type="number"
+                  id="totalPages"
+                  name="totalPages"
+                  value={uploadForm.totalPages}
+                  onChange={handleFormChange}
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label>
+                  <input
+                    type="checkbox"
+                    name="publishToStore"
+                    checked={uploadForm.publishToStore}
+                    onChange={handleFormChange}
+                  />
+                  Publish to Store
+                </label>
+              </div>
+              <div className="form-group">
+                <label htmlFor="coverImage">Cover Image:</label>
+                <div className="file-upload-wrapper">
+                  <input
+                    type="file"
+                    id="coverImage"
+                    name="coverImage"
+                    accept="image/*"
+                    onChange={(e) => handleFileChange(e, 'coverImage')}
+                    style={{ display: 'none' }}
+                  />
+                  <button 
+                    type="button"
+                    className={`custom-file-button ${uploadForm.coverImage ? 'file-selected' : ''}`}
+                    onClick={() => {
+                      console.log('Cover image button clicked');
+                      triggerFileInput('coverImage');
+                    }}
+                  >
+                    <span className="file-icon">🖼️</span>
+                    <span className="file-text">
+                      {uploadForm.coverImage ? uploadForm.coverImage.name : 'Choose Cover Image'}
+                    </span>
+                  </button>
+                  {uploadForm.coverImage && (
+                    <div className="file-info">
+                      <strong>Selected:</strong> {uploadForm.coverImage.name} 
+                      ({(uploadForm.coverImage.size / 1024 / 1024).toFixed(2)} MB)
+                    </div>
+                  )}
+                </div>
+              </div>
+              <div className="form-group">
+                <label htmlFor="bookFile">Book File (PDF):</label>
+                <div className="file-upload-wrapper">
+                  <input
+                    type="file"
+                    id="bookFile"
+                    name="bookFile"
+                    accept=".pdf"
+                    onChange={(e) => handleFileChange(e, 'bookFile')}
+                    style={{ display: 'none' }}
+                  />
+                  <button 
+                    type="button"
+                    className={`custom-file-button ${uploadForm.bookFile ? 'file-selected' : ''}`}
+                    onClick={() => {
+                      console.log('PDF file button clicked');
+                      triggerFileInput('bookFile');
+                    }}
+                  >
+                    <span className="file-icon">📄</span>
+                    <span className="file-text">
+                      {uploadForm.bookFile ? uploadForm.bookFile.name : 'Choose PDF File'}
+                    </span>
+                  </button>
+                  {uploadForm.bookFile && (
+                    <div className="file-info">
+                      <strong>Selected:</strong> {uploadForm.bookFile.name} 
+                      ({(uploadForm.bookFile.size / 1024 / 1024).toFixed(2)} MB)
+                    </div>
+                  )}
+                </div>
+              </div>
+              <div className="upload-progress-bar">
+                <div className="progress-fill" style={{ width: `${uploadProgress}%` }}></div>
+              </div>
+              <button 
+                className="btn-primary"
+                onClick={handleUpload}
+                disabled={uploadStatus === 'uploading'}
+              >
+                {uploadStatus === 'uploading' ? 'Uploading...' : 'Upload Book'}
+              </button>
+              {uploadStatus === 'success' && (
+                <div className="upload-status-message success">
+                  Book uploaded successfully!
+                </div>
+              )}
+              {uploadStatus === 'error' && (
+                <div className="upload-status-message error">
+                  Upload failed. Please check your file and try again.
+                </div>
+              )}
             </div>
           </div>
         </div>

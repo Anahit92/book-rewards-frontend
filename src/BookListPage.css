@@ -497,6 +497,12 @@
   margin: 0;
 }
 
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
 .stats-summary {
   display: flex;
   gap: 2rem;
@@ -842,6 +848,294 @@
 }
 
 /* Upload Modal Specifics */
+.upload-modal-content {
+  background-color: #fff;
+  border-radius: 0.75rem;
+  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  width: 90%;
+  max-width: 600px;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.upload-form-container {
+  padding: 1.5rem;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  color: #374151;
+  font-size: 0.9rem;
+}
+
+.form-group input[type="text"],
+.form-group input[type="number"],
+.form-group textarea {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  box-sizing: border-box;
+}
+
+.form-group input[type="text"]:focus,
+.form-group input[type="number"]:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: #009e68;
+  box-shadow: 0 0 0 3px rgba(0, 158, 104, 0.1);
+}
+
+.form-group textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+/* Custom File Input Styling */
+.form-group input[type="file"] {
+  position: relative;
+  width: 100%;
+  padding: 0.75rem;
+  border: 2px dashed #90b4e8;
+  border-radius: 0.75rem;
+  background: linear-gradient(135deg, #f8faff 0%, #f0f4ff 100%);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 0.9rem;
+  color: #374151;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.form-group input[type="file"]:hover {
+  border-color: #009e68;
+  background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 158, 104, 0.15);
+}
+
+.form-group input[type="file"]:focus {
+  outline: none;
+  border-color: #009e68;
+  box-shadow: 0 0 0 3px rgba(0, 158, 104, 0.1);
+}
+
+/* Style the file upload button for Webkit browsers */
+.form-group input[type="file"]::-webkit-file-upload-button {
+  background: linear-gradient(135deg, #009e68 0%, #10b981 100%) !important;
+  color: white !important;
+  border: none !important;
+  padding: 0.5rem 1rem !important;
+  border-radius: 0.5rem !important;
+  font-weight: 600 !important;
+  font-size: 0.85rem !important;
+  cursor: pointer !important;
+  transition: all 0.3s ease !important;
+  margin-right: 0.75rem !important;
+  box-shadow: none !important;
+}
+
+.form-group input[type="file"]::-webkit-file-upload-button:hover {
+  background: linear-gradient(135deg, #0f6145 0%, #059669 100%) !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 2px 8px rgba(0, 158, 104, 0.3) !important;
+}
+
+/* Firefox file input styling */
+.form-group input[type="file"]::file-selector-button {
+  background: linear-gradient(135deg, #009e68 0%, #10b981 100%) !important;
+  color: white !important;
+  border: none !important;
+  padding: 0.5rem 1rem !important;
+  border-radius: 0.5rem !important;
+  font-weight: 600 !important;
+  font-size: 0.85rem !important;
+  cursor: pointer !important;
+  transition: all 0.3s ease !important;
+  margin-right: 0.75rem !important;
+}
+
+.form-group input[type="file"]::file-selector-button:hover {
+  background: linear-gradient(135deg, #0f6145 0%, #059669 100%) !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 2px 8px rgba(0, 158, 104, 0.3) !important;
+}
+
+/* Hide the "No file chosen" text */
+.form-group input[type="file"]::after {
+  content: "" !important;
+  display: none !important;
+}
+
+/* Custom file input wrapper for better control */
+.file-upload-wrapper {
+  position: relative;
+}
+
+.file-upload-wrapper::before {
+  content: "📁 Choose a file";
+  position: absolute;
+  left: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #64748b;
+  font-weight: 500;
+  font-size: 0.9rem;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* When file is selected, show different text */
+.file-upload-wrapper.has-file::before {
+  content: "✅ File selected";
+  color: #10b981;
+  font-weight: 600;
+}
+
+.file-upload-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  width: 100%;
+  padding: 0.75rem 1rem;
+  background: linear-gradient(135deg, #f8faff 0%, #f0f4ff 100%);
+  border: 2px dashed #90b4e8;
+  border-radius: 0.75rem;
+  color: #374151;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  text-decoration: none;
+  user-select: none;
+}
+
+.file-upload-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(144, 180, 232, 0.1) 0%, transparent 100%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.file-upload-button:hover {
+  border-color: #009e68;
+  background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 158, 104, 0.15);
+}
+
+.file-upload-button:hover::before {
+  opacity: 1;
+}
+
+.file-upload-button:active {
+  transform: translateY(0);
+}
+
+.file-upload-icon {
+  font-size: 1.2rem;
+  color: #009e68;
+  transition: transform 0.3s ease;
+}
+
+.file-upload-button:hover .file-upload-icon {
+  transform: scale(1.1);
+}
+
+.file-upload-text {
+  position: relative;
+  z-index: 1;
+}
+
+.file-selected {
+  background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%) !important;
+  border-color: #10b981 !important;
+  color: #14532d !important;
+}
+
+.file-selected .file-upload-icon {
+  color: #10b981;
+}
+
+.file-info {
+  margin-top: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%);
+  border: 1px solid #bbf7d0;
+  border-radius: 0.5rem;
+  font-size: 0.85rem;
+  color: #14532d;
+  font-weight: 500;
+}
+
+.file-info strong {
+  color: #10b981;
+}
+
+.form-group input[type="checkbox"] {
+  margin-right: 0.5rem;
+  transform: scale(1.2);
+}
+
+.form-group label[for] {
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.upload-progress-bar {
+  width: 100%;
+  height: 8px;
+  background-color: #f1f5f9;
+  border-radius: 4px;
+  overflow: hidden;
+  margin: 1rem 0;
+}
+
+.progress-fill {
+  height: 100%;
+  background-color: #009e68;
+  border-radius: 4px;
+  transition: width 0.3s ease-in-out;
+}
+
+.upload-status-message {
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  margin-top: 1rem;
+  text-align: center;
+}
+
+.upload-status-message.success {
+  background-color: #dcfce7;
+  color: #14532d;
+  border: 1px solid #bbf7d0;
+}
+
+.upload-status-message.error {
+  background-color: #fee2e2;
+  color: #991b1b;
+  border: 1px solid #fecaca;
+}
+
 .drop-zone {
   border: 2px dashed #e2e8f0;
   border-radius: 0.5rem;
@@ -1082,6 +1376,12 @@
     align-items: stretch;
   }
 
+  .header-actions {
+    flex-direction: column;
+    gap: 1rem;
+    align-items: stretch;
+  }
+
   .stats-summary {
     gap: 1rem;
     width: 100%;
@@ -1121,6 +1421,16 @@
   
   .pagination-numbers {
     order: -1;
+  }
+
+  .upload-modal-content {
+    width: 95%;
+    max-width: none;
+    margin: 1rem;
+  }
+
+  .upload-form-container {
+    padding: 1rem;
   }
 }
 
@@ -1289,4 +1599,83 @@
 
 .download-icon {
   font-size: 1.1rem;
+} 
+
+/* Custom File Upload Buttons */
+.custom-file-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  width: 100%;
+  padding: 0.75rem 1rem;
+  background: linear-gradient(135deg, #f8faff 0%, #f0f4ff 100%);
+  border: 2px dashed #90b4e8;
+  border-radius: 0.75rem;
+  color: #374151;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer !important;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  text-decoration: none;
+  user-select: none;
+  pointer-events: auto;
+  z-index: 10;
+}
+
+.custom-file-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(144, 180, 232, 0.1) 0%, transparent 100%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.custom-file-button:hover {
+  border-color: #009e68;
+  background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 158, 104, 0.15);
+}
+
+.custom-file-button:hover::before {
+  opacity: 1;
+}
+
+.custom-file-button:active {
+  transform: translateY(0);
+}
+
+.file-icon {
+  font-size: 1.2rem;
+  color: #009e68;
+  transition: transform 0.3s ease;
+  position: relative;
+  z-index: 1;
+}
+
+.custom-file-button:hover .file-icon {
+  transform: scale(1.1);
+}
+
+.file-text {
+  position: relative;
+  z-index: 1;
+  font-weight: 500;
+}
+
+.custom-file-button.file-selected {
+  background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%) !important;
+  border-color: #10b981 !important;
+  color: #14532d !important;
+}
+
+.custom-file-button.file-selected .file-icon {
+  color: #10b981;
 } 
