@@ -1205,17 +1205,19 @@
 }
 
 /* Book Store Specific Styles */
-.book-card-price {
+.book-card-free-badge {
   position: absolute;
   top: 1rem;
   left: 1rem;
-  background-color: #009e68;
+  background-color: #10b981;
   color: white;
   padding: 0.5rem 0.75rem;
   border-radius: 6px;
-  font-weight: 600;
+  font-weight: 700;
   font-size: 0.9rem;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .book-card-rating {
@@ -1236,6 +1238,8 @@
   margin-bottom: 1rem;
   font-size: 0.85rem;
   color: #64748b;
+  flex-wrap: wrap;
+  gap: 0.5rem;
 }
 
 .book-category {
@@ -1251,7 +1255,16 @@
   font-weight: 500;
 }
 
-.purchase-btn {
+.book-format {
+  background-color: #e0f2fe;
+  color: #0369a1;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-weight: 500;
+  font-size: 0.8rem;
+}
+
+.download-btn {
   width: 100%;
   padding: 0.75rem 1rem;
   border: none;
@@ -1264,16 +1277,16 @@
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  background-color: #009e68;
+  background-color: #3b82f6;
   color: #fff;
 }
 
-.purchase-btn:hover {
-  background-color: #0f6145;
+.download-btn:hover {
+  background-color: #2563eb;
   transform: translateY(-2px);
   box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
 }
 
-.purchase-icon {
+.download-icon {
   font-size: 1.1rem;
 } 

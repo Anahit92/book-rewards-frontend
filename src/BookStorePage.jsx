@@ -4,7 +4,7 @@ import LeftSidebar from './LeftSidebar';
 import Footer from './Footer';
 import './BookListPage.css';
 
-// Mock data for book store
+// Mock data for book store - all books are free
 const mockBookStore = [
   { 
     id: 1, 
@@ -12,9 +12,9 @@ const mockBookStore = [
     author: 'Eric Ries', 
     coverImg: 'https://images.unsplash.com/photo-1589998059171-988d887df646?q=80&w=800', 
     totalPages: 320, 
-    price: 29.99,
     rating: 4.5,
-    category: 'Business'
+    category: 'Business',
+    format: 'PDF'
   },
   { 
     id: 2, 
@@ -22,9 +22,9 @@ const mockBookStore = [
     author: 'Martin Kleppmann', 
     coverImg: 'https://images.unsplash.com/photo-1544947950-fa07a98d237f?q=80&w=800', 
     totalPages: 616, 
-    price: 39.99,
     rating: 4.8,
-    category: 'Technology'
+    category: 'Technology',
+    format: 'PDF'
   },
   { 
     id: 3, 
@@ -32,9 +32,9 @@ const mockBookStore = [
     author: 'James Clear', 
     coverImg: 'https://images.unsplash.com/photo-1592496431122-2349e0fbc666?q=80&w=800', 
     totalPages: 306, 
-    price: 24.99,
     rating: 4.7,
-    category: 'Self-Help'
+    category: 'Self-Help',
+    format: 'EPUB'
   },
   { 
     id: 4, 
@@ -42,9 +42,9 @@ const mockBookStore = [
     author: 'David Thomas, Andrew Hunt', 
     coverImg: 'https://images.unsplash.com/photo-1583394838336-acd977736f90?q=80&w=800', 
     totalPages: 352, 
-    price: 34.99,
     rating: 4.6,
-    category: 'Technology'
+    category: 'Technology',
+    format: 'PDF'
   },
   { 
     id: 5, 
@@ -52,9 +52,9 @@ const mockBookStore = [
     author: 'Robert C. Martin', 
     coverImg: 'https://images.unsplash.com/photo-1543002588-b9b6b622e8af?q=80&w=800', 
     totalPages: 432, 
-    price: 44.99,
     rating: 4.4,
-    category: 'Technology'
+    category: 'Technology',
+    format: 'PDF'
   },
   { 
     id: 6, 
@@ -62,9 +62,9 @@ const mockBookStore = [
     author: 'Cal Newport', 
     coverImg: 'https://images.unsplash.com/photo-1513475382585-d06e58bcb0e0?q=80&w=800', 
     totalPages: 304, 
-    price: 26.99,
     rating: 4.3,
-    category: 'Productivity'
+    category: 'Productivity',
+    format: 'EPUB'
   },
   { 
     id: 7, 
@@ -72,9 +72,9 @@ const mockBookStore = [
     author: 'Daniel Kahneman', 
     coverImg: 'https://images.unsplash.com/photo-1589829085413-56de8ae18c73?q=80&w=800', 
     totalPages: 499, 
-    price: 31.99,
     rating: 4.5,
-    category: 'Psychology'
+    category: 'Psychology',
+    format: 'PDF'
   },
   { 
     id: 8, 
@@ -82,9 +82,9 @@ const mockBookStore = [
     author: 'Morgan Housel', 
     coverImg: 'https://images.unsplash.com/photo-1549122728-f519709442a4?q=80&w=800', 
     totalPages: 256, 
-    price: 22.99,
     rating: 4.6,
-    category: 'Finance'
+    category: 'Finance',
+    format: 'EPUB'
   }
 ];
 
@@ -110,12 +110,12 @@ function BookStorePage() {
           return a.title.localeCompare(b.title);
         case 'title-desc':
           return b.title.localeCompare(a.title);
-        case 'price-low':
-          return a.price - b.price;
-        case 'price-high':
-          return b.price - a.price;
         case 'rating':
           return b.rating - a.rating;
+        case 'pages-low':
+          return a.totalPages - b.totalPages;
+        case 'pages-high':
+          return b.totalPages - a.totalPages;
         default:
           return 0;
       }
@@ -133,8 +133,8 @@ function BookStorePage() {
     setCurrentPage(1);
   }, [searchTerm, filterCategory, sortBy]);
 
-  const handlePurchase = (book) => {
-    alert(`Added "${book.title}" to cart! Price: $${book.price}`);
+  const handleDownload = (book) => {
+    alert(`Downloading "${book.title}" in ${book.format} format! This book is completely free.`);
   };
 
   return (
@@ -144,11 +144,11 @@ function BookStorePage() {
         <LeftSidebar />
         <main className="blp-main">
           <div className="library-header">
-            <h1>Book Store</h1>
+            <h1>Free Book Library</h1>
             <div className="store-stats">
               <span className="stat-item">
                 <span className="stat-number">{books.length}</span>
-                <span className="stat-label">Books Available</span>
+                <span className="stat-label">Free Books Available</span>
               </span>
             </div>
           </div>
@@ -178,9 +178,9 @@ function BookStorePage() {
               <select value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
                 <option value="title-asc">Sort by Title (A-Z)</option>
                 <option value="title-desc">Sort by Title (Z-A)</option>
-                <option value="price-low">Price: Low to High</option>
-                <option value="price-high">Price: High to Low</option>
                 <option value="rating">Sort by Rating</option>
+                <option value="pages-low">Pages: Low to High</option>
+                <option value="pages-high">Pages: High to Low</option>
               </select>
             </div>
           </div>
@@ -199,8 +199,8 @@ function BookStorePage() {
                     className="book-card-cover"
                     style={{ backgroundImage: `url(${book.coverImg})` }}
                   >
-                    <div className="book-card-price">
-                      ${book.price}
+                    <div className="book-card-free-badge">
+                      FREE
                     </div>
                     <div className="book-card-rating">
                       ⭐ {book.rating}
@@ -212,14 +212,15 @@ function BookStorePage() {
                     <div className="book-card-details">
                       <span className="book-category">{book.category}</span>
                       <span className="book-pages">{book.totalPages} pages</span>
+                      <span className="book-format">{book.format}</span>
                     </div>
                     <div className="book-card-actions">
                       <button 
-                        className="purchase-btn"
-                        onClick={() => handlePurchase(book)}
+                        className="download-btn"
+                        onClick={() => handleDownload(book)}
                       >
-                        <span className="purchase-icon">🛒</span>
-                        Add to Cart
+                        <span className="download-icon">📥</span>
+                        Download Free
                       </button>
                     </div>
                   </div>
