@@ -7,6 +7,7 @@ import MyRewardsPage from './MyRewardsPage';
 import MyBooksPage from './MyBooksPage';
 import BookStorePage from './BookStorePage';
 import SettingsPage from './SettingsPage';
+import ProfilePage from './ProfilePage';
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
         <Route path="/my-books" element={<MyBooksPage />} />
         <Route path="/book-store" element={<BookStorePage />} />
         <Route path="/settings" element={<SettingsPage />} />
+        <Route path="/profile" element={<ProfilePage />} />
         <Route path="/" element={<Navigate to="/auth" replace />} />
       </Routes>
     </Router>
